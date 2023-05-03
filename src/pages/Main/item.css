@@ -1,0 +1,24 @@
+.item-done {
+    opacity: 0.4;
+    filter: brightness(0.9);
+    box-shadow: 3px 3px 15px gray !important;
+}
+.item-inprogress {
+    box-shadow: 3px 3px 15px #A3BE8C !important;
+}
+
+.item-active {
+    animation: pulse-red 0.7s ease-in infinite;
+  }
+  
+  @keyframes pulse-red {
+    0% {
+      box-shadow: 0 0 30px 0px #BF616A;
+    }
+    70% {
+      box-shadow: 0 0 30px 10px crimson;
+    }
+    100% {
+      box-shadow: 0 0 30px 0px #BF616A;
+    }
+  }
