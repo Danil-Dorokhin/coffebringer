@@ -8,23 +8,20 @@ const types = [1, 2, 3, 4, 5];
 export const MainPage = () => {
   const [orderList, setOrderList] = useState([]);
 
-  const getOrderList = () => {
-    let searchParams = new URLSearchParams({ offset: 0, limit: 100 });
-
-    types.forEach((type) => {
-      searchParams.append("types", type);
-    });
-
-    return instance
+  const getOrderList = () =>
+    instance
       .get(endpoints.orders, {
-        params: searchParams,
+        params: {
+          offset: 0,
+          limit: 100,
+          types: types.join(","),
+        },
       })
       .then((data) => setOrderList(data.data.data.items));
-  };
 
   useEffect(() => {
     getOrderList();
-    let interval = setInterval(() => getOrderList(), 2000);
+    let interval = setInterval(() => getOrderList(), 15000);
     return () => interval && clearInterval(interval);
   }, []);
 

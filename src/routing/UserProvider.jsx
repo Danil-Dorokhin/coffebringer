@@ -9,7 +9,6 @@ export const UserProvider = ({ children = null }) => {
 
   useEffect(() => {
     const userData = localStorage.getItem("authData");
-    console.log(userData);
     if (userData) setUser(JSON.parse(userData));
   }, []);
 

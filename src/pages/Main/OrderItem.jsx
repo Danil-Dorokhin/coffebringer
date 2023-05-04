@@ -6,20 +6,37 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { endpoints, instance } from "../../utils/endpoints";
+import { instance } from "../../utils/endpoints";
 import "./item.css";
 
+const getItemClassName = (state) => {
+  if (state === "Pending") return "item-active";
+  if (state === "Ready for Pickup") return "item-pending";
+  return "item";
+};
+
 export const OrderItem = ({ order }) => {
-  const handleOrderAction = () => {
+  const handleCompleteOrder = () => {
+    //const formData = new FormData();
+    //formData.append("order", order.id);
+    //instance.post(endpoints.completeOrder, formData);
+    //updateItems();
+  };
+
+  const handleReadyForPickup = () => {
     const formData = new FormData();
     formData.append("order", order.id);
-    instance.post(endpoints.completeOrder, formData);
+    formData.append("state", 6); // hardcoded "fulfilled" state
+    order.items.forEach((item) => {
+      formData.append("items[]", item.item_id); //not sure about [] but their UI have it so i decided - "why not"
+    });
+    return instance.post("/marketplace/orders/updateItemsState", formData);
   };
 
   return (
     <Grid item>
       <Card
-        className={order.state.name === "Created" ? "item-active" : "item"}
+        className={getItemClassName(order.state.name)}
         sx={{ minWidth: 275 }}
       >
         <CardContent>
@@ -47,12 +64,20 @@ export const OrderItem = ({ order }) => {
         </CardContent>
         <CardActions>
           <Button
-            onClick={handleOrderAction}
-            disabled={order.state.name !== "Created"}
+            onClick={handleReadyForPickup}
+            disabled={order.state.name !== "Pending"}
             variant="contained"
             size="small"
           >
-            Done
+            Ready for pickup
+          </Button>
+          <Button
+            onClick={handleCompleteOrder}
+            disabled={order.state.name !== "Ready for Pickup"}
+            variant="contained"
+            size="small"
+          >
+            Complete Order
           </Button>
         </CardActions>
       </Card>
