@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { baseUrl, endpoints, instance } from "../utils/endpoints";
+import { baseURL, endpoints, instance } from "../utils/endpoints";
 
 const UserContext = React.createContext({ user: null });
 
@@ -9,8 +9,9 @@ export const UserProvider = ({ children = null }) => {
 
   useEffect(() => {
     const userData = localStorage.getItem("authData");
+    console.log(userData);
     if (userData) setUser(JSON.parse(userData));
-  });
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("authData");
@@ -21,16 +22,15 @@ export const UserProvider = ({ children = null }) => {
     const formData = new FormData();
     formData.append("login", login);
     formData.append("password", password);
-    axios
-      .post(baseUrl + endpoints.login, formData)
-      .then(({ data: { jwt_token, refresh_token } }) => {
-        const authData = {
-          accessToken: jwt_token,
-          refreshToken: refresh_token,
-        };
-        setUser(authData);
-        localStorage.setItem("authData", authData);
-      });
+    axios.post(baseURL + endpoints.login, formData).then((data) => {
+      const { jwt_token, refresh_token } = data.data.data;
+      const authData = {
+        accessToken: jwt_token,
+        refreshToken: refresh_token,
+      };
+      setUser(authData);
+      localStorage.setItem("authData", JSON.stringify(authData));
+    });
   };
 
   //const updateTokens = (tokens) => {

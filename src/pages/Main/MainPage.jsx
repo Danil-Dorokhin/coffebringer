@@ -3,15 +3,24 @@ import { OrderItem } from "./OrderItem";
 import { useEffect, useState } from "react";
 import { endpoints, instance } from "../../utils/endpoints";
 
+const types = [1, 2, 3, 4, 5];
+
 export const MainPage = () => {
   const [orderList, setOrderList] = useState([]);
 
-  const getOrderList = () =>
-    instance
+  const getOrderList = () => {
+    let searchParams = new URLSearchParams({ offset: 0, limit: 100 });
+
+    types.forEach((type) => {
+      searchParams.append("types", type);
+    });
+
+    return instance
       .get(endpoints.orders, {
-        params: { offset: 0, limit: 100, types: [1, 2, 3, 4, 5] },
+        params: searchParams,
       })
-      .then(({ data: { items } }) => setOrderList(items));
+      .then((data) => setOrderList(data.data.data.items));
+  };
 
   useEffect(() => {
     getOrderList();

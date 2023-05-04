@@ -6,6 +6,6 @@ export const endpoints = {
   completeOrder: "/marketplace/orders/complete",
 };
 
-export const baseUrl = "https://api.flow.reveel.no";
+export const baseURL = "https://beer-api.rembrain.ai";
 
 export const instance = axios.create({ baseURL });
