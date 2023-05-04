@@ -53,7 +53,13 @@ export const UserProvider = ({ children = null }) => {
     }));
 
     instance.interceptors.response.use(
-      (resp) => resp,
+      (resp) => {
+        if (resp.data.status === 401) {
+          logout();
+          return;
+        }
+        return resp;
+      },
       (err) => {
         const requestConfig = err.config;
         const { status } = err.response;

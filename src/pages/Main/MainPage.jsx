@@ -17,7 +17,10 @@ export const MainPage = () => {
           types: types.join(","),
         },
       })
-      .then((data) => setOrderList(data.data.data.items));
+      .then((data) => {
+        console.log(data);
+        return setOrderList(data.data.data.items);
+      });
 
   useEffect(() => {
     getOrderList();
