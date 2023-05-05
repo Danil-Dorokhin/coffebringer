@@ -14,7 +14,7 @@ export const MainPage = () => {
       .get(endpoints.orders, {
         params: {
           offset: 0,
-          limit: 100,
+          limit: 100000,
           types: types.join(","),
         },
       })
