@@ -15,20 +15,6 @@ const getItemClassName = (state) => {
   return "item";
 };
 
-const Divier = () => (
-  <div
-    style={{
-      height: 1,
-      backgroundColor: "grey",
-      width: "90%",
-      marginLeft: "auto",
-      marginRight: "auto",
-      marginTop: "auto",
-      marginBottom: "auto",
-    }}
-  />
-);
-
 export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
   const completeOrder = () => {
     const formData = new FormData();
