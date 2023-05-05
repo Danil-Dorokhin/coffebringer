@@ -7,6 +7,7 @@ const types = [1, 2, 3, 4, 5];
 
 export const MainPage = () => {
   const [orderList, setOrderList] = useState([]);
+  const [completedOrders, setCompletedOrders] = useState([]);
 
   const getOrderList = () =>
     instance
@@ -18,8 +19,7 @@ export const MainPage = () => {
         },
       })
       .then((data) => {
-        console.log(data);
-        return setOrderList(data.data.data.items);
+        setOrderList(data.data.data.items);
       });
 
   useEffect(() => {
@@ -27,6 +27,19 @@ export const MainPage = () => {
     let interval = setInterval(() => getOrderList(), 15000);
     return () => interval && clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const filteredCompletedOrders = completedOrders.filter((id) => {
+      for (let obj of orderList) {
+        if (obj.id === id) {
+          return true;
+        }
+      }
+      return false;
+    });
+    if (filteredCompletedOrders.length !== completedOrders.length)
+      setCompletedOrders(filteredCompletedOrders);
+  }, [completedOrders, orderList]);
 
   return (
     <div>
@@ -38,7 +51,14 @@ export const MainPage = () => {
         spacing={8}
       >
         {orderList.map((order) => (
-          <OrderItem key={order.id} {...{ order }} />
+          <OrderItem
+            key={order.id}
+            {...{ order }}
+            isCompleted={completedOrders.includes(order.id)}
+            setOrderCompleted={() =>
+              setCompletedOrders([...completedOrders, order.id])
+            }
+          />
         ))}
       </Grid>
     </div>

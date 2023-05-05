@@ -6,7 +6,7 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { instance } from "../../utils/endpoints";
+import { instance, endpoints } from "../../utils/endpoints";
 import "./item.css";
 
 const getItemClassName = (state) => {
@@ -15,28 +15,49 @@ const getItemClassName = (state) => {
   return "item";
 };
 
-export const OrderItem = ({ order }) => {
-  const handleCompleteOrder = () => {
-    //const formData = new FormData();
-    //formData.append("order", order.id);
-    //instance.post(endpoints.completeOrder, formData);
-    //updateItems();
+const Divier = () => (
+  <div
+    style={{
+      height: 1,
+      backgroundColor: "grey",
+      width: "90%",
+      marginLeft: "auto",
+      marginRight: "auto",
+      marginTop: "auto",
+      marginBottom: "auto",
+    }}
+  />
+);
+
+export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
+  const completeOrder = () => {
+    const formData = new FormData();
+    formData.append("order", order.id);
+    return instance.post(endpoints.completeOrder, formData);
   };
 
-  const handleReadyForPickup = () => {
+  const readyForPickup = () => {
     const formData = new FormData();
     formData.append("order", order.id);
     formData.append("state", 6); // hardcoded "fulfilled" state
     order.items.forEach((item) => {
       formData.append("items[]", item.item_id); //not sure about [] but their UI have it so i decided - "why not"
     });
-    return instance.post("/marketplace/orders/updateItemsState", formData);
+    return instance.post(endpoints.updateItemsState, formData);
+  };
+
+  const handleCompleteOrder = () => {
+    readyForPickup().then(completeOrder);
+    completeOrder();
+    setOrderCompleted();
   };
 
   return (
     <Grid item>
       <Card
-        className={getItemClassName(order.state.name)}
+        className={
+          isCompleted ? "item-pending" : getItemClassName(order.state.name)
+        }
         sx={{ minWidth: 275 }}
       >
         <CardContent>
@@ -46,9 +67,6 @@ export const OrderItem = ({ order }) => {
               flexDirection: "column",
             }}
           >
-            <Typography variant="h5" component="div">
-              User:
-            </Typography>
             <Typography style={{ maxWidth: 300 }} variant="p" component="div">
               {`${order.mp_api_user.first_name} ${order.mp_api_user.last_name}`}
             </Typography>
@@ -61,19 +79,19 @@ export const OrderItem = ({ order }) => {
           >
             {`Note: ${order.note}`}
           </Typography>
+
+          <Typography
+            style={{ maxWidth: 300, marginTop: 12 }}
+            variant="h6"
+            component="div"
+          >
+            {`Status: ${order.state.name}`}
+          </Typography>
         </CardContent>
         <CardActions>
           <Button
-            onClick={handleReadyForPickup}
-            disabled={order.state.name !== "Pending"}
-            variant="contained"
-            size="small"
-          >
-            Ready for pickup
-          </Button>
-          <Button
+            disabled={order.state.name !== "Pending" || isCompleted}
             onClick={handleCompleteOrder}
-            disabled={order.state.name !== "Ready for Pickup"}
             variant="contained"
             size="small"
           >
