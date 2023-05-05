@@ -68,6 +68,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
 
           <Typography
             style={{ maxWidth: 300, marginTop: 12 }}
+            q
             variant="h6"
             component="div"
           >
@@ -76,7 +77,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
         </CardContent>
         <CardActions>
           <Button
-            disabled={order.state.name !== "Pending" || isCompleted}
+            disabled={isCompleted}
             onClick={handleCompleteOrder}
             variant="contained"
             size="small"
