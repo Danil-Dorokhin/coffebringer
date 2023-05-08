@@ -51,7 +51,12 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
   const handleCompleteOrder = () => {
     readyForPickup().then(completeOrder);
     completeOrder();
+    
     setOrderCompleted();
+
+    const formData = new FormData();
+    formData.append("times",1);
+    instance.post(sendRobot,formData);
   };
 
   return (
@@ -69,7 +74,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
           {order.items.map((item) => (
             <Typography
               style={{ marginLeft: 12 }}
-            >{`- ${item.product.name}`}</Typography>
+            >{`- ${item.quantity} ${item.product.name}`}</Typography>
           ))}
           <Divider />
           <Typography style={typographyStyle} variant="p" component="div">
