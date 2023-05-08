@@ -56,7 +56,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
 
     const formData = new FormData();
     formData.append("times",1);
-    instance.post(sendRobot,formData);
+    instance.post(endpoints.sendRobot,formData);
   };
 
   return (
