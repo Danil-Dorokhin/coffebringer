@@ -5,6 +5,7 @@ export const endpoints = {
   orders: "/marketplace/orders/find",
   completeOrder: "/marketplace/orders/complete",
   updateItemsState: "/marketplace/orders/updateItemsState",
+  sendRobot: "/sendrobot",
 };
 
 export const baseURL = "https://beer-api.rembrain.ai";

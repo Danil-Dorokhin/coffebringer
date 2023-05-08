@@ -56,11 +56,11 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
     return times;
   };
 
-  const handleSendRobot = () =>
-    instance.post(
-      endpoints.sendRobot,
-      new FormData().append("times", getTimes())
-    );
+  const handleSendRobot = () => {
+    const formData = new FormData();
+    formData.append("times", getTimes());
+    instance.post(endpoints.sendRobot, formData);
+  };
 
   const handleCompleteOrder = () => {
     readyForPickup().then(completeOrder);
