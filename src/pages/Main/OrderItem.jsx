@@ -48,15 +48,25 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
     return instance.post(endpoints.updateItemsState, formData);
   };
 
+  const getTimes = () => {
+    let times = 0;
+    order.items.forEach((item) => {
+      times += item.quantity;
+    });
+    return times;
+  };
+
+  const handleSendRobot = () =>
+    instance.post(
+      endpoints.sendRobot,
+      new FormData().append("times", getTimes())
+    );
+
   const handleCompleteOrder = () => {
     readyForPickup().then(completeOrder);
     completeOrder();
-    
     setOrderCompleted();
-
-    const formData = new FormData();
-    formData.append("times",1);
-    instance.post(endpoints.sendRobot,formData);
+    handleSendRobot();
   };
 
   return (
