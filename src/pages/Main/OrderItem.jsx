@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Grid,
   Card,
@@ -32,6 +33,8 @@ const getTimeFormatted = (dateObj) => {
 };
 
 export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
+  const [error, setError] = useState(false);
+
   const completeOrder = () => {
     const formData = new FormData();
     formData.append("order", order.id);
@@ -59,7 +62,12 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
   const handleSendRobot = () => {
     const formData = new FormData();
     formData.append("times", getTimes());
-    instance.post(endpoints.sendRobot, formData);
+    instance.post(endpoints.sendRobot + "asd", formData).then(
+      (resp) => {
+        if (resp.status != 200) setError(true);
+      },
+      () => setError(true)
+    );
   };
 
   const handleCompleteOrder = () => {
@@ -78,6 +86,16 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
         sx={{ minWidth: 275, borderRadius: 6 }}
       >
         <CardContent>
+          {error && (
+            <Typography
+              style={typographyStyle}
+              color="error"
+              variant="h6"
+              component="div"
+            >
+              {"Sorry, robot is offline now  :("}
+            </Typography>
+          )}
           <Typography style={typographyStyle} variant="h5" component="div">
             Order Items:
           </Typography>
