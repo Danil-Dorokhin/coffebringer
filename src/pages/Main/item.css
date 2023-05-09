@@ -1,4 +1,4 @@
-.item-done {
+.item-completed {
     opacity: 0.4;
     filter: brightness(0.9);
     box-shadow: 3px 3px 15px gray !important;

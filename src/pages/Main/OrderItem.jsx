@@ -14,6 +14,7 @@ import "./item.css";
 const getItemClassName = (state) => {
   if (state === "Pending") return "item-active";
   if (state === "Ready for Pickup") return "item-pending";
+  if (state === "Completed") return "item-completed";
   return "item";
 };
 
@@ -56,7 +57,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
     order.items.forEach((item) => {
       times += item.quantity;
     });
-    console.log('times ',times);
+    console.log("times ", times);
     return times;
   };
 
@@ -64,7 +65,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
     const formData = new FormData();
     formData.append("times", getTimes());
     formData.append("note", order.note);
-    console.log('order.note ',order.note);
+    console.log("order.note ", order.note);
     instance.post(endpoints.sendRobot, formData).then(
       (resp) => {
         if (resp.status != 200) setError(true);
@@ -126,7 +127,7 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
         </CardContent>
         <CardActions style={{ justifyContent: "center" }}>
           <Button
-            disabled={isCompleted}
+            disabled={isCompleted || order.state.name === "Completed"}
             onClick={handleCompleteOrder}
             variant="contained"
             size="small"

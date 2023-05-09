@@ -3,7 +3,15 @@ import { OrderItem } from "./OrderItem";
 import { useEffect, useState } from "react";
 import { endpoints, instance } from "../../utils/endpoints";
 
-const types = [1, 2, 3, 4, 5];
+const types = [1, 2, 3, 4, 5, 6];
+
+const getTodayFormatted = () => {
+  const today = new Date();
+  const day = today.getDate().toString().padStart(2, "0");
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const year = today.getFullYear().toString();
+  return `${day}.${month}.${year}`;
+};
 
 export const MainPage = () => {
   const [orderList, setOrderList] = useState([]);
@@ -14,8 +22,10 @@ export const MainPage = () => {
       .get(endpoints.orders, {
         params: {
           offset: 0,
-          limit: 100000,
+          limit: 100000000,
           types: types.join(","),
+          startDate: getTodayFormatted(),
+          endDate: getTodayFormatted(),
         },
       })
       .then((data) => {
@@ -23,15 +33,19 @@ export const MainPage = () => {
       });
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [orderList.length]);
+
+  useEffect(() => {
     getOrderList();
-    let interval = setInterval(() => getOrderList(), 15000);
+    let interval = setInterval(() => getOrderList(), 10000);
     return () => interval && clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const filteredCompletedOrders = completedOrders.filter((id) => {
       for (let obj of orderList) {
-        if (obj.id === id) {
+        if (obj.id === id && obj.state.name !== "Completed") {
           return true;
         }
       }
