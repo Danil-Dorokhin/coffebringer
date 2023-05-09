@@ -56,13 +56,16 @@ export const OrderItem = ({ order, setOrderCompleted, isCompleted }) => {
     order.items.forEach((item) => {
       times += item.quantity;
     });
+    console.log('times ',times);
     return times;
   };
 
   const handleSendRobot = () => {
     const formData = new FormData();
     formData.append("times", getTimes());
-    instance.post(endpoints.sendRobot + "asd", formData).then(
+    formData.append("note", order.note);
+    console.log('order.note ',order.note);
+    instance.post(endpoints.sendRobot, formData).then(
       (resp) => {
         if (resp.status != 200) setError(true);
       },
